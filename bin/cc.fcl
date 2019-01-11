@@ -1,0 +1,80 @@
+// Block definition (there may be more than one block per file)
+FUNCTION_BLOCK colorcontrast
+
+// Define input variables
+VAR_INPUT
+    invib : REAL;
+END_VAR
+
+// Define output variables
+VAR_OUTPUT
+    outvib : REAL;
+END_VAR
+
+// Fuzzify input variable 'invib'
+FUZZIFY invib
+    //TERM low1 := (0, 1) (0.075, 1) (0.15, 0);
+    //TERM low2 := (0.15, 0) (0.225, 1) (0.30, 0);
+    //TERM low3 := (0.30, 0) (0.375, 1) (0.45, 0);
+    //TERM medium := (0.4, 0) (0.5, 1) (0.6, 0);
+    //TERM high3 := (0.55, 0) (0.625, 1) (0.7, 0);
+    //TERM high2 := (0.7, 0) (0.775, 1) (0.85, 0);
+    //TERM high1 := (0.85, 0) (0.925, 1) (1, 1);
+    TERM low1 := gauss 0.075 0.075;
+    TERM low2 := gauss 0.225 0.075;
+    TERM low3 := gauss 0.375 0.075;
+    TERM medium := gauss 0.5 0.075;
+    TERM high3 := gauss 0.625 0.075;
+    TERM high2 := gauss 0.775 0.075;
+    TERM high1 := gauss 0.925 0.075;
+END_FUZZIFY
+
+// Defuzzify output variable 'outvib'
+DEFUZZIFY outvib
+    //TERM lower1 := (0, 1) (0.025, 1) (0.10, 0);
+    //TERM lower2 := (0.10, 0) (0.175, 1) (0.25, 0);
+    //TERM lower3 := (0.25, 0) (0.325, 1) (0.40, 0);
+    //TERM medium := (0.35, 0) (0.5, 1) (0.65, 0);
+    //TERM higher3 := (0.60, 0) (0.675, 1) (0.75, 0);
+    //TERM higher2 := (0.75, 0) (0.825, 1) (0.90, 0);
+    //TERM higher1 := (0.90, 0) (0.975, 1) (1, 1);
+    //TERM lower1 := gauss 0 0.075;
+    //TERM lower2 := gauss 0.075 0.075;
+    //TERM lower3 := gauss 0.225 0.075;
+    //TERM medium := gauss 0.5 0.075;
+    //TERM higher3 := gauss 0.775 0.075;
+    //TERM higher2 := gauss 0.925 0.075;
+    //TERM higher1 := gauss 1 0.075;
+    TERM lower1 := (0, 0) (0.01, 1) (0.02, 0);
+    TERM lower2 := (0.08, 0) (0.09, 1) (0.1, 0);
+    TERM lower3 := (0.23, 0) (0.24, 1) (0.25, 0);
+    TERM medium := (0.49, 0) (0.5, 1) (0.51, 0);
+    TERM higher3 := (0.75, 0) (0.76, 1) (0.77, 0);
+    TERM higher2 := (0.90, 0) (0.91, 1) (0.92, 0);
+    TERM higher1 := (0.98, 0) (0.99, 1) (1, 0);
+    // Use 'Center Of Gravity' defuzzification method
+    METHOD : COG;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    // Use 'min' for 'and' (also implicit use 'max'
+    // for 'or' to fulfill DeMorgan's Law)
+    AND : MIN;
+    // Use 'min' activation method
+    ACT : MIN;
+    // Use 'max' accumulation method
+    ACCU : MAX;
+
+    RULE 1 : IF invib IS low1 THEN outvib IS lower1;
+	RULE 2 : IF invib IS low2 THEN outvib IS lower2;
+	RULE 3 : IF invib IS low3 THEN outvib IS lower3;
+    RULE 4 : IF invib IS medium THEN outvib IS medium;
+	RULE 5 : IF invib IS high3 THEN outvib IS higher3;
+	RULE 6 : IF invib IS high2 THEN outvib IS higher2;
+    RULE 7 : IF invib IS high1 THEN outvib IS higher1;
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

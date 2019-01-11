@@ -1,0 +1,146 @@
+// Block definition (there may be more than one block per file)
+FUNCTION_BLOCK segment
+
+// Define input variables
+VAR_INPUT
+    y : REAL;
+    cb : REAL;
+    cr : REAL;
+END_VAR
+
+// Define output variables
+VAR_OUTPUT
+    outred : REAL;
+    outgreen : REAL;
+    outblue : REAL;
+END_VAR
+
+// Fuzzify input variable 'inpixel'
+FUZZIFY y
+	TERM black := trape 0 0 30 90;
+	TERM color := trape 30 90 150 210;
+	TERM white := trape 150 210 255 255;
+END_FUZZIFY
+
+FUZZIFY cb
+    TERM low := trape 0 0 30 90;
+    TERM medium := trape 30 90 150 210;
+    TERM high := trape 150 210 255 255;
+END_FUZZIFY
+
+FUZZIFY cr
+    TERM low := trape 0 0 30 90;
+    TERM medium := trape 30 90 150 210;
+    TERM high := trape 150 210 255 255;
+END_FUZZIFY
+
+// Defuzzify output variable 'outpixel'
+DEFUZZIFY outred
+    TERM black := 0;
+    TERM green := 0;
+    TERM yellow := 255;
+    TERM red := 255;
+    TERM cyan := 0;
+    TERM grey := 127;
+    TERM crimson := 255;
+    TERM blue := 0;
+    TERM violet := 127;
+    TERM magenta := 255;
+    TERM white := 255;
+    // Use 'Center Of Gravity' defuzzification method
+    METHOD : COGS;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+DEFUZZIFY outgreen
+    TERM black := 0;
+    TERM green := 255;
+    TERM yellow := 255;
+    TERM red := 0;
+    TERM cyan := 255;
+    TERM grey := 127;
+    TERM crimson := 0;
+    TERM blue := 0;
+    TERM violet := 0;
+    TERM magenta := 0;
+    TERM white := 255;
+    // Use 'Center Of Gravity' defuzzification method
+    METHOD : COGS;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+DEFUZZIFY outblue
+    TERM black := 0;
+    TERM green := 0;
+    TERM yellow := 0;
+    TERM red := 0;
+    TERM cyan := 255;
+    TERM grey := 127;
+    TERM crimson := 127;
+    TERM blue := 255;
+    TERM violet := 255;
+    TERM magenta := 0;
+    TERM white := 255;
+    // Use 'Center Of Gravity' defuzzification method
+    METHOD : COGS;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    // Use 'min' for 'and' (also implicit use 'max'
+    // for 'or' to fulfill DeMorgan's Law)
+    AND : MIN;
+    // Use 'min' activation method
+    ACT : MIN;
+    // Use 'max' accumulation method
+    ACCU : MAX;
+
+    RULE 1 : IF y IS black THEN outred IS black;
+    RULE 2 : IF y IS black THEN outgreen IS black;
+    RULE 3 : IF y IS black THEN outblue IS black;
+	RULE 4: IF y IS white THEN outred IS white;
+	RULE 5: IF y IS white THEN outgreen IS white;
+	RULE 6: IF y IS white THEN outblue IS white;
+
+	RULE 7: IF y IS color AND cb IS low AND cr IS low THEN outred IS green;
+	RULE 8: IF y IS color AND cb IS low AND cr IS low THEN outgreen IS green;
+	RULE 9: IF y IS color AND cb IS low AND cr IS low THEN outblue IS green;
+
+	RULE 10: IF y IS color AND cb IS low AND cr IS medium THEN outred IS yellow;
+	RULE 11: IF y IS color AND cb IS low AND cr IS medium THEN outgreen IS yellow;
+	RULE 12: IF y IS color AND cb IS low AND cr IS medium THEN outblue IS yellow;
+
+	RULE 13: IF y IS color AND cb IS low AND cr IS high THEN outred IS red;
+	RULE 14: IF y IS color AND cb IS low AND cr IS high THEN outgreen IS red;
+	RULE 15: IF y IS color AND cb IS low AND cr IS high THEN outblue IS red;
+
+	RULE 16: IF y IS color AND cb IS medium AND cr IS low THEN outred IS cyan;
+	RULE 17: IF y IS color AND cb IS medium AND cr IS low THEN outgreen IS cyan;
+	RULE 18: IF y IS color AND cb IS medium AND cr IS low THEN outblue IS cyan;
+
+	RULE 19: IF y IS color AND cb IS medium AND cr IS medium THEN outred IS grey;
+	RULE 20: IF y IS color AND cb IS medium AND cr IS medium THEN outgreen IS grey;
+	RULE 21: IF y IS color AND cb IS medium AND cr IS medium THEN outblue IS grey;
+
+	RULE 22: IF y IS color AND cb IS medium AND cr IS high THEN outred IS crimson;
+	RULE 23: IF y IS color AND cb IS medium AND cr IS high THEN outgreen IS crimson;
+	RULE 24: IF y IS color AND cb IS medium AND cr IS high THEN outblue IS crimson;
+
+	RULE 25: IF y IS color AND cb IS high AND cr IS low THEN outred IS blue;
+	RULE 26: IF y IS color AND cb IS high AND cr IS low THEN outgreen IS blue;
+	RULE 27: IF y IS color AND cb IS high AND cr IS low THEN outblue IS blue;
+
+	RULE 28: IF y IS color AND cb IS high AND cr IS medium THEN outred IS violet;
+	RULE 29: IF y IS color AND cb IS high AND cr IS medium THEN outgreen IS violet;
+	RULE 30: IF y IS color AND cb IS high AND cr IS medium THEN outblue IS violet;
+
+	RULE 31: IF y IS color AND cb IS high AND cr IS high THEN outred IS magenta;
+	RULE 32: IF y IS color AND cb IS high AND cr IS high THEN outgreen IS magenta;
+	RULE 33: IF y IS color AND cb IS high AND cr IS high THEN outblue IS magenta;
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

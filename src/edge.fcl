@@ -1,0 +1,45 @@
+// Block definition (there may be more than one block per file)
+FUNCTION_BLOCK edge
+
+// Define input variables
+VAR_INPUT
+    inpixel : REAL;
+END_VAR
+
+// Define output variables
+VAR_OUTPUT
+    outpixel : REAL;
+END_VAR
+
+// Fuzzify input variable 'inpixel'
+FUZZIFY inpixel
+    TERM lower := (0, 1) (25, 1) (50, 0) (255, 0); 
+    TERM higher := (0, 0) (25, 0) (50, 1) (255, 1);
+END_FUZZIFY
+
+// Defuzzify output variable 'outpixel'
+DEFUZZIFY outpixel
+    TERM non_edge := gauss 5 5;
+    TERM edge := gauss 250 5;
+    // Use 'Center Of Gravity' defuzzification method
+    METHOD : COG;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    // Use 'min' for 'and' (also implicit use 'max'
+    // for 'or' to fulfill DeMorgan's Law)
+    AND : MIN;
+    // Use 'min' activation method
+    ACT : MIN;
+    // Use 'max' accumulation method
+    ACCU : MAX;
+
+    RULE 1 : IF inpixel IS lower THEN outpixel IS non_edge;
+
+    RULE 2 : IF inpixel IS higher THEN outpixel IS edge; 
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
