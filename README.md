@@ -19,27 +19,27 @@ In the File menu, click on 'Save Files As' to save the tranformed image.
 
 ## Results
 
-Original image:
+**Original image:**
 
 ![Image cannot be loaded](https://i.imgur.com/eNQGupX.jpg)
 
-Image after contrast enhancement:
+**Image after contrast enhancement:**
 
 ![Image cannot be loaded](https://i.imgur.com/G5c91yA.jpg)
 
-Segments demarcated in image:
+**Segments demarcated in image:**
 
 ![Image cannot be loaded](https://i.imgur.com/750FM7D.jpg)
 
-Edges detected in image:
+**Edges detected in image:**
 
 ![Image cannot be loaded](https://i.imgur.com/XKYJesU.jpg)
 
-Grayscale image:
+**Grayscale image:**
 
 ![Image cannot be loaded](https://i.imgur.com/hJ2AntR.jpg)
 
-Grayscale image after grayscale contrast enhancement:
+**Grayscale image after grayscale contrast enhancement:**
 
 ![Image cannot be loaded](https://i.imgur.com/ItPFd4v.jpg)
 
