@@ -1,4 +1,6 @@
 # Fuzzy-Image-Processing-Tool
+> **(October, 2017)**
+
 Image processing tool that uses Java’s jFuzzyLogic library and Fuzzy Control Language (FCL).
 
 ## Procedure
